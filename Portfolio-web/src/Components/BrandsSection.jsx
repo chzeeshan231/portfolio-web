@@ -88,12 +88,14 @@ export default function BrandsSection() {
     const rafRef = useRef(null);
     const lastTsRef = useRef(null);
 
-    // initialise chipRefs structure
-    if (chipRefs.current.length === 0) {
-        ORBIT_RINGS.forEach((ring) => {
-            chipRefs.current.push(ring.indices.map(() => ({ el: null })));
-        });
-    }
+    // Initialise chipRefs structure in useEffect (not during render)
+    useEffect(() => {
+        if (chipRefs.current.length === 0) {
+            ORBIT_RINGS.forEach((ring) => {
+                chipRefs.current.push(ring.indices.map(() => ({ el: null })));
+            });
+        }
+    }, []);
 
     useEffect(() => {
         const container = containerRef.current;

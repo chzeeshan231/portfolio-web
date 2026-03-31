@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { 
   FaFacebookF, FaTwitter, FaLinkedinIn, FaYoutube, 
   FaPhoneAlt, FaEnvelope, FaMapMarkerAlt 

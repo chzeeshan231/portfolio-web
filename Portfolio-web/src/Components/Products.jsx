@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+
 import { FiArrowUpRight } from 'react-icons/fi';
 
 // Asset Imports
