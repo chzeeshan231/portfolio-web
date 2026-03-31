@@ -1,0 +1,325 @@
+/**
+ * BrandsSection.jsx
+ * Drop-in React component. No extra dependencies beyond React itself.
+ *
+ * Setup:
+ *   1. Add Jersey 10 to your HTML <head>:
+ *      <link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+ *   2. Import and use: <BrandsSection />
+ */
+
+import { useEffect, useRef } from "react";
+
+const BRANDS_ROW1 = [
+    { name: "Figma", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+    { name: "GraphQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
+    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+    { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+];
+
+const BRANDS_ROW2 = [
+    { name: "Adobe XD", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg" },
+    { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+    { name: "Gatsby", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gatsby/gatsby-original.svg" },
+    { name: "Illustrator", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" },
+    { name: "Sass", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" },
+    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+    { name: "LinkedIn", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" },
+];
+
+const ALL_BRANDS = [...BRANDS_ROW1, ...BRANDS_ROW2];
+
+const ORBIT_RINGS = [
+    { rXf: 0.44, rYf: 0.090, speed: 9, indices: [0, 1, 2, 3] },
+    { rXf: 0.33, rYf: 0.068, speed: 13, indices: [4, 5, 6] },
+    { rXf: 0.22, rYf: 0.048, speed: 18, indices: [7, 8, 9] },
+    { rXf: 0.13, rYf: 0.030, speed: 24, indices: [10, 11, 12] },
+];
+
+const NUM_LINES = 9;
+
+function BrandPill({ icon }) {
+    const handleEnter = (e) => {
+        e.currentTarget.style.background = "rgba(255,130,20,0.14)";
+        e.currentTarget.style.borderColor = "rgba(255,145,30,0.6)";
+        e.currentTarget.style.transform = "translateY(-3px)";
+    };
+    const handleLeave = (e) => {
+        e.currentTarget.style.background = "rgba(255,255,255,0.055)";
+        e.currentTarget.style.borderColor = "rgba(255,140,30,0.22)";
+        e.currentTarget.style.transform = "translateY(0)";
+    };
+    return (
+        <div
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
+            style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center", // center icon inside
+                width: 72,
+                height: 72,
+                background: "rgba(255,255,255,0.055)",
+                border: "1px solid rgba(255,140,30,0.22)",
+                borderRadius: "50%", // 🔥 makes it circle
+                cursor: "default",
+                transition: "background 0.2s, border-color 0.2s, transform 0.18s",
+            }}
+        >
+            <img src={icon} alt={name} style={{ width: 22, height: 22, display: "block" }} />
+            <span style={{ color: "rgba(255,255,255,0.70)", fontSize: "0.76rem", whiteSpace: "nowrap" }}>
+                {name}
+            </span>
+        </div>
+    );
+}
+
+export default function BrandsSection() {
+    const containerRef = useRef(null);
+    const canvasRef = useRef(null);
+    const chipRefs = useRef([]);
+    const anglesRef = useRef(
+        ORBIT_RINGS.map((o) => o.indices.map((_, i) => (360 / o.indices.length) * i))
+    );
+    const dimsRef = useRef({ W: 0, H: 0, CX: 0, CY: 0, planetSize: 160 });
+    const rafRef = useRef(null);
+    const lastTsRef = useRef(null);
+
+    // Initialise chipRefs structure in useEffect (not during render)
+    useEffect(() => {
+        if (chipRefs.current.length === 0) {
+            ORBIT_RINGS.forEach((ring) => {
+                chipRefs.current.push(ring.indices.map(() => ({ el: null })));
+            });
+        }
+    }, []);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        const canvas = canvasRef.current;
+        if (!container || !canvas) return;
+
+        const ctx = canvas.getContext("2d");
+
+        function measure() {
+            const W = container.clientWidth;
+            const H = Math.max(320, W * 0.52);
+            const CX = W / 2;
+            const CY = H * 0.71;
+            const planetSize = Math.max(100, Math.min(W * 0.175, 195));
+            dimsRef.current = { W, H, CX, CY, planetSize };
+            container.style.height = H + "px";
+            canvas.width = W;
+            canvas.height = H;
+
+            // reposition planet + glow via DOM refs
+            const planet = container.querySelector("#bs-planet");
+            const glow = container.querySelector("#bs-glow");
+            if (planet) {
+                planet.style.width = planetSize + "px";
+                planet.style.height = planetSize + "px";
+                planet.style.left = CX + "px";
+                planet.style.top = CY + "px";
+                const label = planet.querySelector("span");
+                if (label) label.style.fontSize = Math.max(13, planetSize * 0.155) + "px";
+            }
+            if (glow) {
+                glow.style.top = CY + planetSize * 0.36 + "px";
+            }
+        }
+
+        function draw() {
+            const { W, H, CX, CY } = dimsRef.current;
+            ctx.clearRect(0, 0, W, H);
+
+            ORBIT_RINGS.forEach((o) => {
+                ctx.beginPath();
+                ctx.ellipse(CX, CY, o.rXf * W, o.rYf * H, 0, 0, Math.PI * 2);
+                ctx.strokeStyle = "rgba(255,140,30,0.20)";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+
+            for (let i = 0; i < NUM_LINES; i++) {
+                const t = i / (NUM_LINES - 1);
+                const baseX = CX + (t - 0.5) * 24;
+                const topX = CX + (t - 0.5) * W * 0.28;
+                const topY = H * 0.02;
+                const g = ctx.createLinearGradient(baseX, CY - 14, topX, topY);
+                g.addColorStop(0, "rgba(255,150,40,0.60)");
+                g.addColorStop(0.5, "rgba(255,130,20,0.20)");
+                g.addColorStop(1, "rgba(255,110,0,0.00)");
+                ctx.beginPath();
+                ctx.moveTo(baseX, CY - 14);
+                ctx.lineTo(topX, topY);
+                ctx.strokeStyle = g;
+                ctx.lineWidth = i === Math.floor(NUM_LINES / 2) ? 1.5 : 0.85;
+                ctx.stroke();
+            }
+        }
+
+        function updateChips() {
+            const { W, H, CX, CY } = dimsRef.current;
+            ORBIT_RINGS.forEach((ring, ri) => {
+                ring.indices.forEach((_, ii) => {
+                    const ref = chipRefs.current[ri][ii];
+                    if (!ref || !ref.el) return;
+                    const angRad = (anglesRef.current[ri][ii] * Math.PI) / 180;
+                    const ox = Math.cos(angRad) * ring.rXf * W;
+                    const oy = Math.sin(angRad) * ring.rYf * H;
+                    const depth = (Math.sin(angRad) + 1) / 2;
+                    ref.el.style.left = `${CX + ox}px`;
+                    ref.el.style.top = `${CY + oy}px`;
+                    ref.el.style.transform = `translate(-50%,-50%) scale(${0.60 + depth * 0.55})`;
+                    ref.el.style.opacity = 0.35 + depth * 0.65;
+                    ref.el.style.zIndex = Math.sin(angRad) < 0 ? 10 : 30;
+                });
+            });
+        }
+
+        function frame(ts) {
+            if (!lastTsRef.current) lastTsRef.current = ts;
+            const dt = Math.min((ts - lastTsRef.current) / 1000, 0.05);
+            lastTsRef.current = ts;
+            ORBIT_RINGS.forEach((ring, ri) => {
+                ring.indices.forEach((_, ii) => {
+                    anglesRef.current[ri][ii] = (anglesRef.current[ri][ii] + ring.speed * dt) % 360;
+                });
+            });
+            draw();
+            updateChips();
+            rafRef.current = requestAnimationFrame(frame);
+        }
+
+        measure();
+        rafRef.current = requestAnimationFrame(frame);
+
+        const obs = new ResizeObserver(() => { measure(); updateChips(); });
+        obs.observe(container);
+
+        return () => {
+            cancelAnimationFrame(rafRef.current);
+            obs.disconnect();
+        };
+    }, []);
+
+    return (
+        <div style={{ background: "#000", width: "100%", minHeight: "100vh", overflowX: "hidden" }}>
+            <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
+        @keyframes bsPlanetPulse {
+          0%,100% { box-shadow: 0 0 55px 18px rgba(255,130,15,0.42), 0 0 110px 55px rgba(255,90,0,0.16); }
+          50%      { box-shadow: 0 0 80px 28px rgba(255,160,25,0.60), 0 0 160px 80px rgba(255,110,0,0.26); }
+        }
+      `}</style>
+
+            {/* Header */}
+            <div style={{ textAlign: "center", paddingTop: 52, paddingBottom: 14 }}>
+                <h2 style={{
+                    fontFamily: "system-ui, sans-serif",
+                    fontSize: "clamp(1.4rem, 3.5vw, 2.4rem)",
+                    color: "#fff", fontWeight: 400,
+                    margin: "0 0 10px", letterSpacing: "0.01em",
+                }}>
+                    Brands I've Worked With
+                </h2>
+                <p style={{
+                    color: "white",
+                    fontSize: "clamp(0.7rem, 1.4vw, 0.88rem)",
+                    maxWidth: 380, margin: "0 auto",
+                    lineHeight: 1.65, fontStyle: "", padding: "0 16px",
+                }}>
+                    A selection of brands I've had the pleasure of collaborating with —
+                    building creative solutions, strong visuals, and meaningful connections.
+                </p>
+            </div>
+
+            {/* Brand pills */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "0 16px" }}>
+                {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
+                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+                        {row.map((b) => <BrandPill key={b.name} {...b} />)}
+                    </div>
+                ))}
+            </div>
+
+            {/* 3-D Orbital scene */}
+            <div ref={containerRef} style={{ position: "relative", width: "100%" }}>
+                <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
+
+                {/* Ground glow */}
+                <div id="bs-glow" style={{
+                    position: "absolute", left: "50%", transform: "translateX(-50%)",
+                    width: "clamp(260px,72%,800px)", height: 72,
+                    background: "radial-gradient(ellipse, rgba(255,110,0,0.18) 0%, transparent 70%)",
+                    borderRadius: "50%", pointerEvents: "none", zIndex: 1,
+                }} />
+
+                {/* Planet */}
+                <div
+                    id="bs-planet"
+                    style={{
+                        position: "absolute",
+                        top: "80%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        borderRadius: "50%",
+                        background:
+                            "radial-gradient(circle at 38% 36%, #ffbe5c 0%, #ff7a00 52%, #c44d00 100%)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 20,
+                        animation: "bsPlanetPulse 3.2s ease-in-out infinite",
+                    }}
+                >
+                    <span
+                        style={{
+                            fontFamily: "'Jersey 10', monospace",
+                            color: "#fff",
+                            textAlign: "center",
+                            lineHeight: 1.2,
+                            textShadow: "0 2px 10px rgba(0,0,0,0.35)",
+                            letterSpacing: "0.02em",
+                        }}
+                    >
+                        Lex Cove
+                        <br />
+                        Creative
+                    </span>
+                </div>
+
+                {/* Orbiting chips */}
+                {ORBIT_RINGS.map((ring, ri) =>
+                    ring.indices.map((bi, ii) => {
+                        if (bi >= ALL_BRANDS.length) return null;
+                        const brand = ALL_BRANDS[bi];
+                        return (
+                            <div
+                                key={`${ri}-${ii}`}
+                                ref={(el) => { if (chipRefs.current[ri]?.[ii]) chipRefs.current[ri][ii].el = el; }}
+                                style={{ position: "absolute", pointerEvents: "none", zIndex: 15 }}
+                            >
+                                <div style={{
+                                    display: "flex", alignItems: "center", gap: 4,
+                                    background: "rgba(0,0,0,0.62)",
+                                    border: "1px solid rgba(255,130,30,0.38)",
+                                    borderRadius: 8, padding: "4px 7px",
+                                    backdropFilter: "blur(4px)", whiteSpace: "nowrap",
+                                }}>
+                                    <img src={brand.icon} alt={brand.name} style={{ width: 16, height: 16, display: "block" }} />
+                                    <span style={{ color: "rgba(255,200,130,0.9)", fontSize: "0.58rem", fontFamily: "system-ui,sans-serif" }}>
+                                        {brand.name}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    })
+                )}
+            </div>
+        </div>
+    );
+}
