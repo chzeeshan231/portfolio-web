@@ -77,8 +77,8 @@ function BrandPill({ icon, name }) {
     return (
         <div
             style={{
-                width: 58,
-                height: 58,
+                width: 84,
+                height: 84,
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
@@ -89,7 +89,7 @@ function BrandPill({ icon, name }) {
             aria-label={name}
             title={name}
         >
-            <img src={icon} alt={name} style={{ width: 24, height: 24, display: "block" }} />
+            <img src={icon} alt={name} style={{ width: 36, height: 36, display: "block" }} />
         </div>
     );
 }
@@ -147,10 +147,10 @@ export default function BrandsSection() {
 
         function measure() {
             const W = container.clientWidth;
-            const H = Math.max(280, Math.min(440, W * 0.42));
+            const H = Math.max(320, Math.min(480, W * 0.46));
             const CX = W / 2;
-            const CY = H * 0.80;
-            const planetSize = Math.max(90, Math.min(W * 0.17, 180));
+            const CY = H * 0.64;
+            const planetSize = Math.max(96, Math.min(W * 0.18, 188));
             dimsRef.current = { W, H, CX, CY, planetSize };
             container.style.height = H + "px";
             canvas.width = W;
@@ -317,14 +317,14 @@ export default function BrandsSection() {
             {/* Static top icons matching reference */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, padding: "0 16px" }}>
                 {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
-                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
                         {row.map((b) => <BrandPill key={b.name} {...b} />)}
                     </div>
                 ))}
             </div>
 
             {/* 3-D Orbital scene */}
-            <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: 1040, margin: "22px auto 0", overflow: "hidden" }}>
+            <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: 1120, margin: "-18px auto 0", overflow: "hidden" }}>
                 <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
                 {/* Ground glow */}
@@ -381,8 +381,8 @@ export default function BrandsSection() {
                                 style={{ position: "absolute", pointerEvents: "none", zIndex: 15, opacity: 0, left: "50%", top: "78%" }}
                             >
                                 <div style={{
-                                    width: 38,
-                                    height: 38,
+                                    width: 56,
+                                    height: 56,
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -393,7 +393,7 @@ export default function BrandsSection() {
                                 }}>
                                     <brand.Icon
                                         title={brand.name}
-                                        style={{ color: "#ffb24a", width: 18, height: 18, display: "block" }}
+                                        style={{ color: "#ffb24a", width: 28, height: 28, display: "block" }}
                                     />
                                 </div>
                             </div>
