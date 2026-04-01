@@ -9,28 +9,37 @@
  */
 
 import { useEffect, useRef } from "react";
+import {
+    FaFacebookF,
+    FaInstagram,
+    FaLinkedinIn,
+    FaYoutube,
+    FaTwitter,
+    FaSnapchatGhost,
+    FaTiktok,
+    FaPinterestP,
+    FaWhatsapp,
+    FaTelegramPlane,
+    FaDiscord,
+    FaGithub,
+    FaDribbble,
+} from "react-icons/fa";
 
-const BRANDS_ROW1 = [
-    { name: "Figma", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
-    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
-    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
-    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
-    { name: "GraphQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg" },
-    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
-    { name: "TypeScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" },
+const ALL_BRANDS = [
+    { name: "Facebook", Icon: FaFacebookF },
+    { name: "Instagram", Icon: FaInstagram },
+    { name: "LinkedIn", Icon: FaLinkedinIn },
+    { name: "YouTube", Icon: FaYoutube },
+    { name: "Twitter", Icon: FaTwitter },
+    { name: "Snapchat", Icon: FaSnapchatGhost },
+    { name: "TikTok", Icon: FaTiktok },
+    { name: "Pinterest", Icon: FaPinterestP },
+    { name: "WhatsApp", Icon: FaWhatsapp },
+    { name: "Telegram", Icon: FaTelegramPlane },
+    { name: "Discord", Icon: FaDiscord },
+    { name: "GitHub", Icon: FaGithub },
+    { name: "Dribbble", Icon: FaDribbble },
 ];
-
-const BRANDS_ROW2 = [
-    { name: "Adobe XD", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg" },
-    { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
-    { name: "Gatsby", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gatsby/gatsby-original.svg" },
-    { name: "Illustrator", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" },
-    { name: "Sass", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" },
-    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
-    { name: "LinkedIn", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" },
-];
-
-const ALL_BRANDS = [...BRANDS_ROW1, ...BRANDS_ROW2];
 
 const ORBIT_RINGS = [
     { rXf: 0.44, rYf: 0.090, speed: 9, indices: [0, 1, 2, 3] },
@@ -41,37 +50,8 @@ const ORBIT_RINGS = [
 
 const NUM_LINES = 9;
 
-function BrandPill({ icon, name }) {
-    const handleEnter = (e) => {
-        e.currentTarget.style.background = "rgba(255,130,20,0.14)";
-        e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,145,30,0.28), 0 10px 24px rgba(255,120,0,0.22)";
-        e.currentTarget.style.transform = "translateY(-3px)";
-    };
-    const handleLeave = (e) => {
-        e.currentTarget.style.background = "rgba(255,255,255,0.045)";
-        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,140,30,0.12)";
-        e.currentTarget.style.transform = "translateY(0)";
-    };
-    return (
-        <div
-            onMouseEnter={handleEnter}
-            onMouseLeave={handleLeave}
-            style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center", // center icon inside
-                width: 86,
-                height: 86,
-                background: "rgba(255,255,255,0.045)",
-                boxShadow: "inset 0 0 0 1px rgba(255,140,30,0.12)",
-                borderRadius: "50%", // 🔥 makes it circle
-                cursor: "default",
-                transition: "background 0.2s, box-shadow 0.2s, transform 0.18s",
-            }}
-        >
-            <img src={icon} alt={name} style={{ width: 34, height: 34, display: "block" }} />
-        </div>
-    );
+function easeOutCubic(x) {
+    return 1 - Math.pow(1 - x, 3);
 }
 
 export default function BrandsSection() {
@@ -85,6 +65,11 @@ export default function BrandsSection() {
     const rafRef = useRef(null);
     const lastTsRef = useRef(null);
     const motionTimeRef = useRef(0);
+    const introProgressRef = useRef(0);
+    const introStartedRef = useRef(false);
+    const iconPosRef = useRef(
+        ORBIT_RINGS.map((ring) => ring.indices.map(() => ({ x: 0, y: 0, a: 0 })))
+    );
 
     // Initialise chipRefs structure in useEffect (not during render)
     useEffect(() => {
@@ -93,6 +78,24 @@ export default function BrandsSection() {
                 chipRefs.current.push(ring.indices.map(() => ({ el: null })));
             });
         }
+    }, []);
+
+    useEffect(() => {
+        const node = containerRef.current;
+        if (!node) return;
+
+        const obs = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    introStartedRef.current = true;
+                    obs.disconnect();
+                }
+            },
+            { threshold: 0.3 }
+        );
+
+        obs.observe(node);
+        return () => obs.disconnect();
     }, []);
 
     useEffect(() => {
@@ -132,6 +135,7 @@ export default function BrandsSection() {
         function draw(time) {
             const { W, H, CX, CY } = dimsRef.current;
             ctx.clearRect(0, 0, W, H);
+            const intro = easeOutCubic(introProgressRef.current);
 
             ORBIT_RINGS.forEach((o, idx) => {
                 const wobbleY = Math.sin(time * (0.9 + idx * 0.15) + idx) * H * 0.005;
@@ -160,6 +164,25 @@ export default function BrandsSection() {
                 ctx.lineWidth = i === Math.floor(NUM_LINES / 2) ? 1.5 : 0.85;
                 ctx.stroke();
             }
+
+            ORBIT_RINGS.forEach((ring, ri) => {
+                ring.indices.forEach((_, ii) => {
+                    const pos = iconPosRef.current[ri][ii];
+                    if (!pos.a) return;
+                    const t = (ii + 1) / (ring.indices.length + 1);
+                    const stemX = CX + (t - 0.5) * W * 0.24;
+                    const stemY = H * (0.05 + t * 0.015);
+                    const grad = ctx.createLinearGradient(stemX, stemY, pos.x, pos.y);
+                    grad.addColorStop(0, `rgba(255,170,60,${0.22 * intro})`);
+                    grad.addColorStop(1, `rgba(255,145,40,${0.5 * pos.a})`);
+                    ctx.beginPath();
+                    ctx.moveTo(stemX, stemY);
+                    ctx.lineTo(pos.x, pos.y);
+                    ctx.strokeStyle = grad;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                });
+            });
         }
 
         function updateChips() {
@@ -172,10 +195,19 @@ export default function BrandsSection() {
                     const ox = Math.cos(angRad) * ring.rXf * W;
                     const oy = Math.sin(angRad) * ring.rYf * H;
                     const depth = (Math.sin(angRad) + 1) / 2;
-                    ref.el.style.left = `${CX + ox}px`;
-                    ref.el.style.top = `${CY + oy}px`;
-                    ref.el.style.transform = `translate(-50%,-50%) scale(${0.60 + depth * 0.55})`;
-                    ref.el.style.opacity = 0.35 + depth * 0.65;
+                    const orbitX = CX + ox;
+                    const orbitY = CY + oy;
+                    const stemT = (ii + 1) / (ring.indices.length + 1);
+                    const spawnX = CX + (stemT - 0.5) * W * 0.24;
+                    const spawnY = H * (0.05 + stemT * 0.015);
+                    const intro = easeOutCubic(introProgressRef.current);
+                    const x = spawnX + (orbitX - spawnX) * intro;
+                    const y = spawnY + (orbitY - spawnY) * intro;
+                    iconPosRef.current[ri][ii] = { x, y, a: intro };
+                    ref.el.style.left = `${x}px`;
+                    ref.el.style.top = `${y}px`;
+                    ref.el.style.transform = `translate(-50%,-50%) scale(${(0.68 + depth * 0.48) * (0.65 + intro * 0.35)})`;
+                    ref.el.style.opacity = (0.1 + depth * 0.9) * intro;
                     ref.el.style.zIndex = Math.sin(angRad) < 0 ? 10 : 30;
                 });
             });
@@ -186,6 +218,9 @@ export default function BrandsSection() {
             const dt = Math.min((ts - lastTsRef.current) / 1000, 0.05);
             lastTsRef.current = ts;
             motionTimeRef.current += dt;
+            if (introStartedRef.current && introProgressRef.current < 1) {
+                introProgressRef.current = Math.min(1, introProgressRef.current + dt * 0.52);
+            }
             ORBIT_RINGS.forEach((ring, ri) => {
                 ring.indices.forEach((_, ii) => {
                     anglesRef.current[ri][ii] = (anglesRef.current[ri][ii] + ring.speed * dt) % 360;
@@ -239,17 +274,8 @@ export default function BrandsSection() {
                 </p>
             </div>
 
-            {/* Brand pills */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "0 16px" }}>
-                {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
-                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
-                        {row.map((b) => <BrandPill key={b.name} {...b} />)}
-                    </div>
-                ))}
-            </div>
-
             {/* 3-D Orbital scene */}
-            <div ref={containerRef} style={{ position: "relative", width: "100%", overflow: "hidden" }}>
+            <div ref={containerRef} style={{ position: "relative", width: "100%", overflow: "hidden", marginTop: 28 }}>
                 <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
                 {/* Ground glow */}
@@ -306,17 +332,20 @@ export default function BrandsSection() {
                                 style={{ position: "absolute", pointerEvents: "none", zIndex: 15 }}
                             >
                                 <div style={{
-                                    width: 34,
-                                    height: 34,
+                                    width: 38,
+                                    height: 38,
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    background: "rgba(0,0,0,0.58)",
+                                    background: "rgba(0,0,0,0.70)",
                                     borderRadius: "50%",
-                                    boxShadow: "inset 0 0 0 1px rgba(255,140,30,0.20)",
+                                    boxShadow: "inset 0 0 0 1px rgba(255,165,70,0.45), 0 0 18px rgba(255,145,35,0.24)",
                                     backdropFilter: "blur(4px)",
                                 }}>
-                                    <img src={brand.icon} alt={brand.name} style={{ width: 18, height: 18, display: "block" }} />
+                                    <brand.Icon
+                                        title={brand.name}
+                                        style={{ color: "#ffb24a", width: 18, height: 18, display: "block" }}
+                                    />
                                 </div>
                             </div>
                         );

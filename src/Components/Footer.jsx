@@ -10,7 +10,7 @@ const Footer = () => {
   return (
     /* --- PURE BLACK WRAPPER --- */
     /* This ensures that the area behind the top half of the orange bar is black */
-    <div className="bg-[#000000] pt-20"> 
+    <div id="contact" className="bg-[#000000] pt-20 scroll-mt-24"> 
       
       {/* --- FOOTER MAIN (Background #1F1F20) --- */}
       <footer className="relative bg-[#1F1F20] pt-16 pb-6 px-6 font-['Urbanist'] overflow-visible">

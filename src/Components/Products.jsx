@@ -21,7 +21,7 @@ const FeaturedProjects = () => {
   const duplicatedProjects = [...projects, ...projects];
 
   return (
-    <section className="relative min-h-screen w-full bg-[#050505] py-20 px-6 overflow-hidden flex flex-col items-center">
+    <section id="portfolio" className="relative min-h-screen w-full bg-[#050505] py-20 px-6 overflow-hidden flex flex-col items-center scroll-mt-28">
       
       {/* --- BACKGROUND LAYERS --- */}
       <img 

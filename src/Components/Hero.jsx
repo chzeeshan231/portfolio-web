@@ -11,6 +11,13 @@ import vector1Img from '../assets/Vector 1.png';
 const HeroSection = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setIsOpen(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden selection:bg-orange-500/30 font-['Urbanist']">
       {/* --- FONT IMPORT --- */}
@@ -27,10 +34,10 @@ const HeroSection = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-8 text-sm font-semibold">
-            <a href="#" className="bg-[#ff8c42] px-6 py-2 rounded-full text-white">Home</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="bg-[#ff8c42] px-6 py-2 rounded-full text-white">Home</a>
             <a href="#" className="text-gray-400 hover:text-white transition-colors">About</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Portfolio</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors">Contact</a>
+            <button onClick={() => scrollToSection('portfolio')} className="text-gray-400 hover:text-white transition-colors">Portfolio</button>
+            <button onClick={() => scrollToSection('contact')} className="text-gray-400 hover:text-white transition-colors">Contact</button>
           </div>
 
           <button className="hidden lg:block bg-[#ff8c42] text-white px-7 py-2.5 rounded-full text-sm font-bold hover:brightness-110 transition-all">
@@ -50,11 +57,11 @@ const HeroSection = () => {
               exit={{ opacity: 0, scale: 0.95 }}
               className="absolute top-20 left-0 w-full bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 flex flex-col gap-4 lg:hidden shadow-2xl"
             >
-              <a href="#" className="text-xl font-bold text-[#ff8c42]">Home</a>
+              <a href="#" onClick={(e) => { e.preventDefault(); setIsOpen(false); }} className="text-xl font-bold text-[#ff8c42]">Home</a>
               <a href="#" className="text-xl font-medium">About</a>
-              <a href="#" className="text-xl font-medium">Portfolio</a>
-              <a href="#" className="text-xl font-medium">Contact</a>
-              <button className="bg-[#ff8c42] w-full py-4 rounded-2xl font-bold mt-2">Get Consultation</button>
+              <button onClick={() => scrollToSection('portfolio')} className="text-left text-xl font-medium">Portfolio</button>
+              <button onClick={() => scrollToSection('contact')} className="text-left text-xl font-medium">Contact</button>
+              <button onClick={() => scrollToSection('contact')} className="bg-[#ff8c42] w-full py-4 rounded-2xl font-bold mt-2">Get Consultation</button>
             </motion.div>
           )}
         </AnimatePresence>
@@ -125,10 +132,10 @@ const HeroSection = () => {
               transition={{ delay: 0.8 }}
               className="absolute bottom-2 md:bottom-4 z-30 flex items-center bg-white/10 backdrop-blur-3xl border border-white/20 p-1 rounded-full shadow-2xl"
             >
-              <button className="bg-[#ff8c42] text-white px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-[10px] md:text-base flex items-center gap-2 hover:brightness-110 transition-all whitespace-nowrap">
+              <button onClick={() => scrollToSection('portfolio')} className="bg-[#ff8c42] text-white px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-[10px] md:text-base flex items-center gap-2 hover:brightness-110 transition-all whitespace-nowrap">
                 Portfolio <span className="text-sm md:text-lg">↗</span>
               </button>
-              <button className="px-4 md:px-8 py-2 md:py-3 font-bold text-[10px] md:text-base hover:bg-white/5 rounded-full transition-all whitespace-nowrap">
+              <button onClick={() => scrollToSection('contact')} className="px-4 md:px-8 py-2 md:py-3 font-bold text-[10px] md:text-base hover:bg-white/5 rounded-full transition-all whitespace-nowrap">
                 Get In Touch
               </button>
             </motion.div>
