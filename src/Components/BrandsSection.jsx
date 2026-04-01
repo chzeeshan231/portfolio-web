@@ -168,7 +168,6 @@ export default function BrandsSection() {
         function draw(time) {
             const { W, H, CX, CY } = dimsRef.current;
             ctx.clearRect(0, 0, W, H);
-            const intro = easeOutCubic(introProgressRef.current);
 
             ORBIT_RINGS.forEach((o, idx) => {
                 const wobbleY = Math.sin(time * (0.9 + idx * 0.15) + idx) * H * 0.005;
@@ -198,24 +197,6 @@ export default function BrandsSection() {
                 ctx.stroke();
             }
 
-            ORBIT_RINGS.forEach((ring, ri) => {
-                ring.indices.forEach((_, ii) => {
-                    const pos = iconPosRef.current[ri][ii];
-                    if (!pos.a) return;
-                    const t = (ii + 1) / (ring.indices.length + 1);
-                    const stemX = CX + (t - 0.5) * W * 0.24;
-                    const stemY = H * (0.05 + t * 0.015);
-                    const grad = ctx.createLinearGradient(stemX, stemY, pos.x, pos.y);
-                    grad.addColorStop(0, `rgba(255,170,60,${0.22 * intro})`);
-                    grad.addColorStop(1, `rgba(255,145,40,${0.5 * pos.a})`);
-                    ctx.beginPath();
-                    ctx.moveTo(stemX, stemY);
-                    ctx.lineTo(pos.x, pos.y);
-                    ctx.strokeStyle = grad;
-                    ctx.lineWidth = 0.8;
-                    ctx.stroke();
-                });
-            });
         }
 
         function updateChips() {
