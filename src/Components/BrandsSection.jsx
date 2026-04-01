@@ -374,19 +374,16 @@ export default function BrandsSection() {
                                 style={{ position: "absolute", pointerEvents: "none", zIndex: 15, opacity: 0, left: "50%", top: "78%" }}
                             >
                                 <div style={{
-                                    width: "clamp(42px, 6vw, 56px)",
-                                    height: "clamp(42px, 6vw, 56px)",
+                                    width: "clamp(18px, 2.2vw, 24px)",
+                                    height: "clamp(18px, 2.2vw, 24px)",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    background: "rgba(0,0,0,0.70)",
-                                    borderRadius: "50%",
-                                    boxShadow: "inset 0 0 0 1px rgba(255,165,70,0.45), 0 0 18px rgba(255,145,35,0.24)",
-                                    backdropFilter: "blur(4px)",
+                                    filter: "drop-shadow(0 0 3px rgba(255,140,30,0.45))",
                                 }}>
                                     <brand.Icon
                                         title={brand.name}
-                                        style={{ color: "#ffb24a", width: "clamp(20px, 3vw, 28px)", height: "clamp(20px, 3vw, 28px)", display: "block" }}
+                                        style={{ color: "#ff9a2e", width: "clamp(10px, 1.2vw, 14px)", height: "clamp(10px, 1.2vw, 14px)", display: "block" }}
                                     />
                                 </div>
                             </div>
