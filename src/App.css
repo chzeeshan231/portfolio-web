@@ -1,0 +1,86 @@
+.loader-screen {
+	min-height: 100vh;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 16px;
+	background:
+		radial-gradient(circle at 50% 55%, rgba(255, 140, 40, 0.22), transparent 40%),
+		radial-gradient(circle at 20% 0%, rgba(255, 140, 40, 0.06), transparent 35%),
+		#050505;
+	color: #fff;
+	overflow: hidden;
+}
+
+.loader-core {
+	position: relative;
+	width: 150px;
+	height: 150px;
+}
+
+.loader-ring {
+	position: absolute;
+	inset: 0;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 154, 46, 0.45);
+}
+
+.loader-ring-lg {
+	animation: ringSpin 2.2s linear infinite;
+}
+
+.loader-ring-md {
+	inset: 14px;
+	border-color: rgba(255, 154, 46, 0.62);
+	animation: ringSpinReverse 1.7s linear infinite;
+}
+
+.loader-ring-sm {
+	inset: 30px;
+	border-color: rgba(255, 176, 74, 0.85);
+	animation: ringPulse 1.5s ease-in-out infinite;
+}
+
+.loader-center-glow {
+	position: absolute;
+	inset: 45px;
+	border-radius: 999px;
+	background: radial-gradient(circle at 38% 34%, #ffc47d 0%, #ff8a1f 58%, #cc5a00 100%);
+	box-shadow: 0 0 36px rgba(255, 138, 31, 0.65);
+}
+
+.loader-brand {
+	font-family: 'Jersey 10', monospace;
+	letter-spacing: 0.05em;
+	font-size: clamp(1.7rem, 5vw, 2.6rem);
+	margin: 0;
+	animation: textGlow 1.8s ease-in-out infinite;
+}
+
+.loader-subtitle {
+	margin: 0;
+	color: rgba(255, 255, 255, 0.78);
+	font-size: clamp(0.9rem, 2.2vw, 1.05rem);
+}
+
+@keyframes ringSpin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+@keyframes ringSpinReverse {
+	from { transform: rotate(360deg); }
+	to { transform: rotate(0deg); }
+}
+
+@keyframes ringPulse {
+	0%, 100% { transform: scale(0.96); opacity: 0.92; }
+	50% { transform: scale(1.02); opacity: 1; }
+}
+
+@keyframes textGlow {
+	0%, 100% { text-shadow: 0 0 10px rgba(255, 145, 35, 0.28); }
+	50% { text-shadow: 0 0 20px rgba(255, 145, 35, 0.6); }
+}
