@@ -168,7 +168,7 @@ const HeroSection = () => {
         </div>
       </main>
 
-      <div className="fixed top-[-10%] right-[-10%] w-[500px] h-[500px] bg-[#ff8c42]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+      <div className="absolute top-0 right-0 translate-x-1/4 -translate-y-1/4 w-[420px] h-[420px] bg-[#ff8c42]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
     </div>
   );
 };

@@ -16,14 +16,21 @@ const App = () => {
   if (isLoading) {
     return (
       <div className="loader-screen" role="status" aria-live="polite" aria-label="Loading website">
+        <div className="loader-aurora" />
+        <div className="loader-grid" />
         <div className="loader-core">
           <div className="loader-ring loader-ring-lg" />
           <div className="loader-ring loader-ring-md" />
           <div className="loader-ring loader-ring-sm" />
+          <div className="loader-ring loader-ring-dash" />
           <div className="loader-center-glow" />
         </div>
+        <div className="loader-scanline" />
         <h1 className="loader-brand">Lex Cove Creative</h1>
         <p className="loader-subtitle">Crafting cinematic visual experiences...</p>
+        <div className="loader-progress">
+          <span className="loader-progress-fill" />
+        </div>
       </div>
     )
   }
