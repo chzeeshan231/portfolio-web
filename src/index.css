@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
+:root {
+  overflow-x: clip;
+}
+
 html,
 body,
 #root {
@@ -20,6 +24,12 @@ body {
   font-family: 'Urbanist', sans-serif;
   margin: 0;
   position: relative;
+}
+
+img,
+svg,
+canvas {
+  max-width: 100%;
 }
 
 .app-shell {

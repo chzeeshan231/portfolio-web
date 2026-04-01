@@ -33,7 +33,7 @@ const FeaturedProjects = () => {
       <img 
         src={petalsBg} 
         alt="petals" 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] h-[110%] max-w-none object-contain pointer-events-none z-10"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1400px] h-[110%] object-contain pointer-events-none z-10"
       />
 
       {/* --- CONTENT --- */}

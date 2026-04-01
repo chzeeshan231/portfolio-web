@@ -19,7 +19,7 @@ const HeroSection = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden selection:bg-orange-500/30 font-['Urbanist']">
+    <div className="min-h-screen bg-[#050505] text-white overflow-x-clip selection:bg-orange-500/30 font-['Urbanist']">
       {/* --- FONT IMPORT --- */}
       <style>
         {`@import url('https://fonts.googleapis.com/css2?family=Jersey+10&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap');`}

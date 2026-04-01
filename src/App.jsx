@@ -5,6 +5,7 @@ import './App.css'
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [progress, setProgress] = useState(1)
+  const phaseLabel = progress < 34 ? 'SYNC' : progress < 74 ? 'BUILD' : 'READY'
 
   useEffect(() => {
     const duration = 2500
@@ -41,9 +42,12 @@ const App = () => {
             <div className="loader-ring loader-ring-md absolute inset-[14px] rounded-full border border-orange-300/55" />
             <div className="loader-ring loader-ring-sm absolute inset-[30px] rounded-full border border-orange-200/70" />
             <div className="loader-ring loader-ring-dash absolute inset-[5px] rounded-full border border-dashed border-orange-200/40" />
+            <span className="loader-orbit-track absolute inset-[22px] rounded-full border border-orange-200/30" />
+            <span className="loader-comet absolute left-1/2 top-1/2 block h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-orange-200 shadow-[0_0_12px_rgba(255,190,120,0.9)]" />
 
             <div className="absolute inset-[46px] rounded-full bg-gradient-to-br from-[#ffc47d] via-[#ff8a1f] to-[#cc5a00] shadow-[0_0_42px_rgba(255,138,31,0.78)]" />
             <span className="loader-orbiter absolute inset-[38px] rounded-full border border-orange-200/35" />
+            <span className="loader-core-pulse absolute inset-[58px] rounded-full border border-orange-100/50" />
 
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
               <span className="text-[10px] tracking-[0.26em] text-orange-200/70">LOADING</span>
@@ -51,6 +55,7 @@ const App = () => {
                 {progress}
               </span>
               <span className="text-[10px] text-orange-100/80">%</span>
+              <span className="mt-0.5 text-[9px] tracking-[0.24em] text-orange-100/70">{phaseLabel}</span>
             </div>
           </div>
 
