@@ -5,7 +5,7 @@ import React from 'react';
 // Asset Imports
 import whatIcon from '../assets/what.png';
 import icon4 from '../assets/icon4.png';
-import gradientBg from '../assets/gradient.png';
+import gradientBg from '../assets/Gradient.png';
 import img1 from '../assets/img1.png';
 import img2 from '../assets/img2.png';
 import img3 from '../assets/img3.png';
