@@ -41,15 +41,15 @@ const ORBIT_RINGS = [
 
 const NUM_LINES = 9;
 
-function BrandPill({ icon }) {
+function BrandPill({ icon, name }) {
     const handleEnter = (e) => {
         e.currentTarget.style.background = "rgba(255,130,20,0.14)";
-        e.currentTarget.style.borderColor = "rgba(255,145,30,0.6)";
+        e.currentTarget.style.boxShadow = "0 0 0 1px rgba(255,145,30,0.28), 0 10px 24px rgba(255,120,0,0.22)";
         e.currentTarget.style.transform = "translateY(-3px)";
     };
     const handleLeave = (e) => {
-        e.currentTarget.style.background = "rgba(255,255,255,0.055)";
-        e.currentTarget.style.borderColor = "rgba(255,140,30,0.22)";
+        e.currentTarget.style.background = "rgba(255,255,255,0.045)";
+        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,140,30,0.12)";
         e.currentTarget.style.transform = "translateY(0)";
     };
     return (
@@ -60,19 +60,16 @@ function BrandPill({ icon }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center", // center icon inside
-                width: 72,
-                height: 72,
-                background: "rgba(255,255,255,0.055)",
-                border: "1px solid rgba(255,140,30,0.22)",
+                width: 86,
+                height: 86,
+                background: "rgba(255,255,255,0.045)",
+                boxShadow: "inset 0 0 0 1px rgba(255,140,30,0.12)",
                 borderRadius: "50%", // 🔥 makes it circle
                 cursor: "default",
-                transition: "background 0.2s, border-color 0.2s, transform 0.18s",
+                transition: "background 0.2s, box-shadow 0.2s, transform 0.18s",
             }}
         >
-            <img src={icon} alt={name} style={{ width: 22, height: 22, display: "block" }} />
-            <span style={{ color: "rgba(255,255,255,0.70)", fontSize: "0.76rem", whiteSpace: "nowrap" }}>
-                {name}
-            </span>
+            <img src={icon} alt={name} style={{ width: 34, height: 34, display: "block" }} />
         </div>
     );
 }
@@ -87,6 +84,7 @@ export default function BrandsSection() {
     const dimsRef = useRef({ W: 0, H: 0, CX: 0, CY: 0, planetSize: 160 });
     const rafRef = useRef(null);
     const lastTsRef = useRef(null);
+    const motionTimeRef = useRef(0);
 
     // Initialise chipRefs structure in useEffect (not during render)
     useEffect(() => {
@@ -131,23 +129,26 @@ export default function BrandsSection() {
             }
         }
 
-        function draw() {
+        function draw(time) {
             const { W, H, CX, CY } = dimsRef.current;
             ctx.clearRect(0, 0, W, H);
 
-            ORBIT_RINGS.forEach((o) => {
+            ORBIT_RINGS.forEach((o, idx) => {
+                const wobbleY = Math.sin(time * (0.9 + idx * 0.15) + idx) * H * 0.005;
+                const tilt = Math.sin(time * 0.35 + idx * 0.7) * 0.09;
                 ctx.beginPath();
-                ctx.ellipse(CX, CY, o.rXf * W, o.rYf * H, 0, 0, Math.PI * 2);
-                ctx.strokeStyle = "rgba(255,140,30,0.20)";
+                ctx.ellipse(CX, CY + wobbleY, o.rXf * W, o.rYf * H, tilt, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(255,140,30,${0.12 + idx * 0.035})`;
                 ctx.lineWidth = 1;
                 ctx.stroke();
             });
 
             for (let i = 0; i < NUM_LINES; i++) {
                 const t = i / (NUM_LINES - 1);
-                const baseX = CX + (t - 0.5) * 24;
-                const topX = CX + (t - 0.5) * W * 0.28;
-                const topY = H * 0.02;
+                const sway = Math.sin(time * 1.3 + i * 0.6) * W * 0.02;
+                const baseX = CX + (t - 0.5) * 24 + sway * 0.28;
+                const topX = CX + (t - 0.5) * W * 0.28 + sway;
+                const topY = H * (0.02 + Math.cos(time * 0.9 + i * 0.4) * 0.008);
                 const g = ctx.createLinearGradient(baseX, CY - 14, topX, topY);
                 g.addColorStop(0, "rgba(255,150,40,0.60)");
                 g.addColorStop(0.5, "rgba(255,130,20,0.20)");
@@ -184,12 +185,13 @@ export default function BrandsSection() {
             if (!lastTsRef.current) lastTsRef.current = ts;
             const dt = Math.min((ts - lastTsRef.current) / 1000, 0.05);
             lastTsRef.current = ts;
+            motionTimeRef.current += dt;
             ORBIT_RINGS.forEach((ring, ri) => {
                 ring.indices.forEach((_, ii) => {
                     anglesRef.current[ri][ii] = (anglesRef.current[ri][ii] + ring.speed * dt) % 360;
                 });
             });
-            draw();
+            draw(motionTimeRef.current);
             updateChips();
             rafRef.current = requestAnimationFrame(frame);
         }
@@ -238,16 +240,16 @@ export default function BrandsSection() {
             </div>
 
             {/* Brand pills */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, padding: "0 16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12, padding: "0 16px" }}>
                 {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
-                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
                         {row.map((b) => <BrandPill key={b.name} {...b} />)}
                     </div>
                 ))}
             </div>
 
             {/* 3-D Orbital scene */}
-            <div ref={containerRef} style={{ position: "relative", width: "100%" }}>
+            <div ref={containerRef} style={{ position: "relative", width: "100%", overflow: "hidden" }}>
                 <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
                 {/* Ground glow */}
@@ -304,16 +306,17 @@ export default function BrandsSection() {
                                 style={{ position: "absolute", pointerEvents: "none", zIndex: 15 }}
                             >
                                 <div style={{
-                                    display: "flex", alignItems: "center", gap: 4,
-                                    background: "rgba(0,0,0,0.62)",
-                                    border: "1px solid rgba(255,130,30,0.38)",
-                                    borderRadius: 8, padding: "4px 7px",
-                                    backdropFilter: "blur(4px)", whiteSpace: "nowrap",
+                                    width: 34,
+                                    height: 34,
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    background: "rgba(0,0,0,0.58)",
+                                    borderRadius: "50%",
+                                    boxShadow: "inset 0 0 0 1px rgba(255,140,30,0.20)",
+                                    backdropFilter: "blur(4px)",
                                 }}>
-                                    <img src={brand.icon} alt={brand.name} style={{ width: 16, height: 16, display: "block" }} />
-                                    <span style={{ color: "rgba(255,200,130,0.9)", fontSize: "0.58rem", fontFamily: "system-ui,sans-serif" }}>
-                                        {brand.name}
-                                    </span>
+                                    <img src={brand.icon} alt={brand.name} style={{ width: 18, height: 18, display: "block" }} />
                                 </div>
                             </div>
                         );
