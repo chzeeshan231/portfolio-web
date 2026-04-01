@@ -91,7 +91,7 @@ const VisualServices = () => {
             </div>
 
             {/* IMAGE SIDE (Custom width 558px for desktop) */}
-            <div className="relative z-10 w-full md:w-[558px] h-auto flex items-center justify-center">
+            <div className="relative z-10 w-full md:w-[558px] h-auto flex items-center justify-center overflow-hidden">
               
               {/* Visible Gradient Glow */}
               <motion.img 
@@ -99,7 +99,7 @@ const VisualServices = () => {
                 transition={{ duration: 5, repeat: Infinity }}
                 src={gradientBg}
                 alt="glow"
-                className="absolute -z-10 w-[130%] h-[160%] max-w-none pointer-events-none object-contain"
+                className="absolute -z-10 w-[115%] h-[150%] pointer-events-none object-contain"
                 style={{ filter: 'brightness(1.3)' }}
               />
               

@@ -1,53 +1,20 @@
 .loader-screen {
-	min-height: 100vh;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	gap: 14px;
-	background:
-		radial-gradient(circle at 50% 56%, rgba(255, 140, 40, 0.2), transparent 42%),
-		radial-gradient(circle at 15% 0%, rgba(255, 140, 40, 0.09), transparent 36%),
-		#050505;
-	color: #fff;
-	overflow: hidden;
-	position: relative;
-}
-
-.loader-aurora {
-	position: absolute;
-	inset: -25%;
-	background:
-		radial-gradient(circle at 25% 20%, rgba(255, 170, 84, 0.18), transparent 32%),
-		radial-gradient(circle at 75% 80%, rgba(255, 123, 30, 0.16), transparent 35%);
-	filter: blur(10px);
-	animation: auroraDrift 6s ease-in-out infinite;
+	isolation: isolate;
 }
 
 .loader-grid {
-	position: absolute;
-	inset: 0;
 	background-image: linear-gradient(rgba(255, 150, 45, 0.08) 1px, transparent 1px),
 		linear-gradient(90deg, rgba(255, 150, 45, 0.08) 1px, transparent 1px);
 	background-size: 64px 64px;
 	mask-image: radial-gradient(circle at center, black 30%, transparent 78%);
-	opacity: 0.28;
 }
 
 .loader-core {
-	position: relative;
-	width: 168px;
-	height: 168px;
 	animation: coreFloat 2.2s ease-in-out infinite;
-	z-index: 2;
 }
 
 .loader-ring {
-	position: absolute;
-	inset: 0;
-	border-radius: 999px;
-	border: 1px solid rgba(255, 154, 46, 0.38);
+	will-change: transform;
 }
 
 .loader-ring-lg {
@@ -55,71 +22,27 @@
 }
 
 .loader-ring-md {
-	inset: 15px;
-	border-color: rgba(255, 154, 46, 0.7);
 	animation: ringSpinReverse 1.7s linear infinite;
 }
 
 .loader-ring-sm {
-	inset: 33px;
-	border-color: rgba(255, 176, 74, 0.85);
 	animation: ringPulse 1.5s ease-in-out infinite;
 }
 
 .loader-ring-dash {
-	inset: 5px;
-	border: 1px dashed rgba(255, 195, 120, 0.5);
 	animation: ringSpinReverse 4.8s linear infinite;
 }
 
-.loader-center-glow {
-	position: absolute;
-	inset: 48px;
-	border-radius: 999px;
-	background: radial-gradient(circle at 38% 34%, #ffc47d 0%, #ff8a1f 58%, #cc5a00 100%);
-	box-shadow: 0 0 44px rgba(255, 138, 31, 0.72);
+.loader-orbiter {
+	animation: ringSpin 1.25s linear infinite;
 }
 
 .loader-scanline {
-	width: min(360px, 76vw);
-	height: 1px;
-	background: linear-gradient(90deg, transparent, rgba(255, 170, 85, 0.8), transparent);
 	animation: scanPulse 1.4s ease-in-out infinite;
-	z-index: 2;
 }
 
 .loader-brand {
-	font-family: 'Jersey 10', monospace;
-	letter-spacing: 0.05em;
-	font-size: clamp(1.7rem, 5vw, 2.6rem);
-	margin: 0;
 	animation: textGlow 1.8s ease-in-out infinite;
-	z-index: 2;
-}
-
-.loader-subtitle {
-	margin: 0;
-	color: rgba(255, 255, 255, 0.78);
-	font-size: clamp(0.9rem, 2.2vw, 1.05rem);
-	z-index: 2;
-}
-
-.loader-progress {
-	width: min(280px, 70vw);
-	height: 7px;
-	border-radius: 999px;
-	background: rgba(255, 255, 255, 0.08);
-	overflow: hidden;
-	position: relative;
-	z-index: 2;
-}
-
-.loader-progress-fill {
-	position: absolute;
-	inset: 0;
-	transform-origin: left;
-	animation: progressFill 2.5s ease-out forwards;
-	background: linear-gradient(90deg, #ff8d2b 0%, #ffbd73 52%, #ff8d2b 100%);
 }
 
 @keyframes ringSpin {
@@ -152,12 +75,3 @@
 	50% { opacity: 1; transform: scaleX(1); }
 }
 
-@keyframes progressFill {
-	from { transform: scaleX(0); }
-	to { transform: scaleX(1); }
-}
-
-@keyframes auroraDrift {
-	0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-	50% { transform: translate3d(1.5%, -1.5%, 0) scale(1.03); }
-}
