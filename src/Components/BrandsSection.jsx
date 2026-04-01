@@ -41,6 +41,25 @@ const ALL_BRANDS = [
     { name: "Dribbble", Icon: FaDribbble },
 ];
 
+const BRANDS_ROW1 = [
+    { name: "Figma", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" },
+    { name: "React", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" },
+    { name: "C++", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg" },
+    { name: "Node.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" },
+    { name: "Sass", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sass/sass-original.svg" },
+    { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" },
+    { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" },
+];
+
+const BRANDS_ROW2 = [
+    { name: "Adobe XD", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xd/xd-plain.svg" },
+    { name: "Next.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" },
+    { name: "Gatsby", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/gatsby/gatsby-original.svg" },
+    { name: "Illustrator", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg" },
+    { name: "Express", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" },
+    { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" },
+];
+
 const ORBIT_RINGS = [
     { rXf: 0.44, rYf: 0.090, speed: 9, indices: [0, 1, 2, 3] },
     { rXf: 0.33, rYf: 0.068, speed: 13, indices: [4, 5, 6] },
@@ -52,6 +71,27 @@ const NUM_LINES = 9;
 
 function easeOutCubic(x) {
     return 1 - Math.pow(1 - x, 3);
+}
+
+function BrandPill({ icon, name }) {
+    return (
+        <div
+            style={{
+                width: 58,
+                height: 58,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                background: "rgba(16,16,18,0.92)",
+                boxShadow: "inset 0 0 0 1px rgba(255,145,35,0.26)",
+            }}
+            aria-label={name}
+            title={name}
+        >
+            <img src={icon} alt={name} style={{ width: 24, height: 24, display: "block" }} />
+        </div>
+    );
 }
 
 export default function BrandsSection() {
@@ -107,10 +147,10 @@ export default function BrandsSection() {
 
         function measure() {
             const W = container.clientWidth;
-            const H = Math.max(320, W * 0.52);
+            const H = Math.max(280, Math.min(440, W * 0.42));
             const CX = W / 2;
-            const CY = H * 0.71;
-            const planetSize = Math.max(100, Math.min(W * 0.175, 195));
+            const CY = H * 0.80;
+            const planetSize = Math.max(90, Math.min(W * 0.17, 180));
             dimsRef.current = { W, H, CX, CY, planetSize };
             container.style.height = H + "px";
             canvas.width = W;
@@ -244,7 +284,7 @@ export default function BrandsSection() {
     }, []);
 
     return (
-        <div style={{ background: "#000", width: "100%", minHeight: "100vh", overflowX: "hidden" }}>
+        <div style={{ background: "#000", width: "100%", overflowX: "hidden", paddingBottom: 30 }}>
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Jersey+10&display=swap');
         @keyframes bsPlanetPulse {
@@ -274,8 +314,17 @@ export default function BrandsSection() {
                 </p>
             </div>
 
+            {/* Static top icons matching reference */}
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, padding: "0 16px" }}>
+                {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
+                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}>
+                        {row.map((b) => <BrandPill key={b.name} {...b} />)}
+                    </div>
+                ))}
+            </div>
+
             {/* 3-D Orbital scene */}
-            <div ref={containerRef} style={{ position: "relative", width: "100%", overflow: "hidden", marginTop: 28 }}>
+            <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: 1040, margin: "22px auto 0", overflow: "hidden" }}>
                 <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
                 {/* Ground glow */}
@@ -329,7 +378,7 @@ export default function BrandsSection() {
                             <div
                                 key={`${ri}-${ii}`}
                                 ref={(el) => { if (chipRefs.current[ri]?.[ii]) chipRefs.current[ri][ii].el = el; }}
-                                style={{ position: "absolute", pointerEvents: "none", zIndex: 15 }}
+                                style={{ position: "absolute", pointerEvents: "none", zIndex: 15, opacity: 0, left: "50%", top: "78%" }}
                             >
                                 <div style={{
                                     width: 38,
