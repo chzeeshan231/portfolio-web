@@ -73,7 +73,7 @@ const VisualServices = () => {
           >
             
             {/* TEXT SIDE (Custom width 630px for desktop) */}
-            <div className={`z-30 w-full md:w-[630px] ${index % 2 === 0 ? 'md:-mr-24' : 'md:-ml-24'} mb-10 md:mb-0`}>
+            <div className={`z-30 w-full md:w-[630px] ${index % 2 === 0 ? 'lg:-mr-24' : 'lg:-ml-24'} mb-10 md:mb-0`}>
               <h3 className={`text-2xl md:text-4xl font-bold text-white mb-8 ${index % 2 !== 0 ? 'md:text-right' : 'text-left'}`}>
                 {service.title}
               </h3>

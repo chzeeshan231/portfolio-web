@@ -40,7 +40,7 @@ const HeroSection = () => {
             <button onClick={() => scrollToSection('contact')} className="text-gray-400 hover:text-white transition-colors">Contact</button>
           </div>
 
-          <button className="hidden lg:block bg-[#ff8c42] text-white px-7 py-2.5 rounded-full text-sm font-bold hover:brightness-110 transition-all">
+          <button onClick={() => scrollToSection('contact')} className="hidden lg:block bg-[#ff8c42] text-white px-7 py-2.5 rounded-full text-sm font-bold hover:brightness-110 transition-all">
             Get Free Consultation
           </button>
 

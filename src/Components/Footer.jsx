@@ -29,11 +29,11 @@ const Footer = () => {
               Let’s discuss your project today.
             </h2>
           </div>
-          <div className="flex gap-3">
-            <button className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-100 transition-all active:scale-95 shadow-lg whitespace-nowrap">
+          <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <button className="bg-white text-black px-6 py-2.5 rounded-full text-sm font-bold hover:bg-gray-100 transition-all active:scale-95 shadow-lg whitespace-nowrap w-full sm:w-auto">
               Book Now
             </button>
-            <button className="border-2 border-white text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-white/10 transition-all active:scale-95 whitespace-nowrap">
+            <button className="border-2 border-white text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-white/10 transition-all active:scale-95 whitespace-nowrap w-full sm:w-auto">
               Contact Us
             </button>
           </div>

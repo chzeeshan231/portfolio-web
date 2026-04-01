@@ -54,7 +54,7 @@ const ExperienceSection = () => {
           </div>
 
           {/* Company Cards with Glow Animation */}
-          <div className="space-y-7 mb-30">
+          <div className="space-y-5 md:space-y-7 mb-8 md:mb-12">
             {[
               { name: "Orbitron Tech", icon: icon1 },
               { name: "Vertex Labs", icon: icon2 },
@@ -93,16 +93,16 @@ const ExperienceSection = () => {
           </h2>
 
           {/* Toggle Buttons */}
-          <div className="flex bg-white/[0.03] p-1 rounded-xl border border-white/5 w-fit mb-8">
+          <div className="flex flex-wrap bg-white/[0.03] p-1 rounded-xl border border-white/5 w-fit mb-8 gap-1">
             <button 
               onClick={() => setActiveTab('work')}
-              className={`px-5 py-2 text-sm md:text-base rounded-lg font-bold transition-all ${activeTab === 'work' ? 'bg-[#ff8c42] text-white' : 'text-gray-500'}`}
+              className={`px-4 md:px-5 py-2 text-sm md:text-base rounded-lg font-bold transition-all ${activeTab === 'work' ? 'bg-[#ff8c42] text-white' : 'text-gray-500'}`}
             >
               Work Experience
             </button>
             <button 
               onClick={() => setActiveTab('edu')}
-              className={`px-5 py-2 text-sm md:text-base rounded-lg font-bold transition-all ${activeTab === 'edu' ? 'bg-[#ff8c42] text-white' : 'text-gray-500'}`}
+              className={`px-4 md:px-5 py-2 text-sm md:text-base rounded-lg font-bold transition-all ${activeTab === 'edu' ? 'bg-[#ff8c42] text-white' : 'text-gray-500'}`}
             >
               My Education
             </button>
