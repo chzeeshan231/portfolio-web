@@ -105,8 +105,8 @@ export default function BrandsSection() {
     const rafRef = useRef(null);
     const lastTsRef = useRef(null);
     const motionTimeRef = useRef(0);
-    const introProgressRef = useRef(0);
-    const introStartedRef = useRef(false);
+    const introProgressRef = useRef(1);
+    const introStartedRef = useRef(true);
     const iconPosRef = useRef(
         ORBIT_RINGS.map((ring) => ring.indices.map(() => ({ x: 0, y: 0, a: 0 })))
     );
