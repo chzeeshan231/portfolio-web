@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { FiMenu, FiX } from 'react-icons/fi';
 
