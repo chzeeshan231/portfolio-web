@@ -77,8 +77,8 @@ function BrandPill({ icon, name }) {
     return (
         <div
             style={{
-                width: 84,
-                height: 84,
+                width: "clamp(62px, 8vw, 84px)",
+                height: "clamp(62px, 8vw, 84px)",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
@@ -89,7 +89,7 @@ function BrandPill({ icon, name }) {
             aria-label={name}
             title={name}
         >
-            <img src={icon} alt={name} style={{ width: 36, height: 36, display: "block" }} />
+            <img src={icon} alt={name} style={{ width: "clamp(26px, 3.2vw, 36px)", height: "clamp(26px, 3.2vw, 36px)", display: "block" }} />
         </div>
     );
 }
@@ -97,7 +97,9 @@ function BrandPill({ icon, name }) {
 export default function BrandsSection() {
     const containerRef = useRef(null);
     const canvasRef = useRef(null);
-    const chipRefs = useRef([]);
+    const chipRefs = useRef(
+        ORBIT_RINGS.map((ring) => ring.indices.map(() => ({ el: null })))
+    );
     const anglesRef = useRef(
         ORBIT_RINGS.map((o) => o.indices.map((_, i) => (360 / o.indices.length) * i))
     );
@@ -110,15 +112,6 @@ export default function BrandsSection() {
     const iconPosRef = useRef(
         ORBIT_RINGS.map((ring) => ring.indices.map(() => ({ x: 0, y: 0, a: 0 })))
     );
-
-    // Initialise chipRefs structure in useEffect (not during render)
-    useEffect(() => {
-        if (chipRefs.current.length === 0) {
-            ORBIT_RINGS.forEach((ring) => {
-                chipRefs.current.push(ring.indices.map(() => ({ el: null })));
-            });
-        }
-    }, []);
 
     useEffect(() => {
         const node = containerRef.current;
@@ -147,9 +140,9 @@ export default function BrandsSection() {
 
         function measure() {
             const W = container.clientWidth;
-            const H = Math.max(320, Math.min(480, W * 0.46));
+            const H = Math.max(300, Math.min(500, W * 0.48));
             const CX = W / 2;
-            const CY = H * 0.64;
+            const CY = H * (W < 700 ? 0.59 : 0.62);
             const planetSize = Math.max(96, Math.min(W * 0.18, 188));
             dimsRef.current = { W, H, CX, CY, planetSize };
             container.style.height = H + "px";
@@ -317,14 +310,14 @@ export default function BrandsSection() {
             {/* Static top icons matching reference */}
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, padding: "0 16px" }}>
                 {[BRANDS_ROW1, BRANDS_ROW2].map((row, ri) => (
-                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 10 }}>
+                    <div key={ri} style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "clamp(6px, 1.2vw, 10px)" }}>
                         {row.map((b) => <BrandPill key={b.name} {...b} />)}
                     </div>
                 ))}
             </div>
 
             {/* 3-D Orbital scene */}
-            <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: 1120, margin: "-18px auto 0", overflow: "hidden" }}>
+            <div ref={containerRef} style={{ position: "relative", width: "100%", maxWidth: 1120, margin: "-10px auto 0", overflow: "hidden" }}>
                 <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }} />
 
                 {/* Ground glow */}
@@ -381,8 +374,8 @@ export default function BrandsSection() {
                                 style={{ position: "absolute", pointerEvents: "none", zIndex: 15, opacity: 0, left: "50%", top: "78%" }}
                             >
                                 <div style={{
-                                    width: 56,
-                                    height: 56,
+                                    width: "clamp(42px, 6vw, 56px)",
+                                    height: "clamp(42px, 6vw, 56px)",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
@@ -393,7 +386,7 @@ export default function BrandsSection() {
                                 }}>
                                     <brand.Icon
                                         title={brand.name}
-                                        style={{ color: "#ffb24a", width: 28, height: 28, display: "block" }}
+                                        style={{ color: "#ffb24a", width: "clamp(20px, 3vw, 28px)", height: "clamp(20px, 3vw, 28px)", display: "block" }}
                                     />
                                 </div>
                             </div>
